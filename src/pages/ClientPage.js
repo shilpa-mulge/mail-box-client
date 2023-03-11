@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 
 function ClientPage() {
+  
   return (
     <Container className="py-5">
       <Row>

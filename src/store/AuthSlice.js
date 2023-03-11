@@ -11,7 +11,7 @@ if(initialData!==null&&now.getTime()>initialData.expiry){
 
 const AuthSlice=createSlice({
     name:'auth',
-    initialState:{token:item!==null?initialData.token:'', email:item!==null?initialData.email:'', isLoggedIn:item!==null?true:false},
+    initialState:{token:item!==null?initialData.token:'', email:item!==null?initialData.emailId:'', isLoggedIn:item!==null?true:false},
     reducers:{
         login(state,action){
             item = {
