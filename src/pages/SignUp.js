@@ -2,9 +2,12 @@ import React,{useState} from "react";
 import { Container , Form, Button,Row} from "react-bootstrap";
 import axios from "axios";
 import LoadingSpinner from "../UI/LodingSpinner";
-
+import { useDispatch } from "react-redux";
+import { AuthActions } from "../store/AuthSlice";
+import { useNavigate } from "react-router-dom";
 const SignUp=()=>{
-
+const dispatch=useDispatch()
+const Navigate=useNavigate()
     const [isLoding, setIsLoading] = useState(false)
     // Initialize state for form fields
     const [email, setEmail] = useState('');
@@ -22,7 +25,9 @@ const SignUp=()=>{
               alert("User has successfully signed up.")
               const emailid = response.data.email.split('@')[0];
                 const token=response.data.idToken
-               console.log("Sccessfully signed up")
+               dispatch(AuthActions.login({token:token, emailid:emailid}))
+               Navigate('/home')
+               
               
             } catch (error) {
                 alert(error.response.data.error.message)
