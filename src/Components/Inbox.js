@@ -14,7 +14,8 @@ function Inbox() {
         mailArr.push({
             id:key,
             subject:response.data[key].subject,
-            content:response.data[key].emailContent
+            content:response.data[key].emailContent,
+            date:response.data[key].date
         })
     }
     setInbox(mailArr)
@@ -42,7 +43,7 @@ useEffect(()=>{
                        <h5>{mail.subject}</h5>
                        <p>{mail.content}</p>
                      </div>
-                     <div>2 days ago</div>
+                     <div>{mail.date}</div>
                    </div>
                  </ListGroup.Item>  
                 ))}

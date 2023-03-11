@@ -23,14 +23,20 @@ const EmailForm = () => {
 
   const handleSubmit =async (event) => {
     event.preventDefault();
+    const date=new Date()
+    const day=date.getDay();
+    const month=date.getMonth();
+    const year=date.getFullYear();
+
+    const time=`${day}/${month}/${year}`;
     const remail = Remail.split('@')[0];
     const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
 const value = blocks.map(block => (!block.text.trim() && '\n') || block.text).join('\n');
     // Code to submit email goes here
     const response=await axios.post(`https://mail-box-client-406c3-default-rtdb.firebaseio.com/${email}/sentbox.json`, {Semail:Semail,
-Remail:Remail,subject:subject, emailContent:value})
+Remail:Remail,subject:subject, emailContent:value, date:time})
 await axios.post(`https://mail-box-client-406c3-default-rtdb.firebaseio.com/${remail}/inbox.json`, {Semail:Semail,
-Remail:Remail,subject:subject, emailContent:value})
+Remail:Remail,subject:subject, emailContent:value, date:time})
 console.log(response.data)
   };
   
