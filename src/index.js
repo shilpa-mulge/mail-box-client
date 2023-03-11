@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import '../node_modules/bootstrap/dist/js/bootstrap'
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import '../node_modules/axios/dist/axios'
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <>
