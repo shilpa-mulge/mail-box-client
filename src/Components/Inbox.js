@@ -1,11 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Container, Row, Col, ListGroup } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { MailAction } from '../store/MailSlice';
 function Inbox() {
-    const email=useSelector(state=>state.auth.email);
+  const dispatch=useDispatch()
+    const mail=useSelector(state=>state.auth.email)
+    const email=mail.split('@')[0]
     const [inbox, setInbox]=useState([])
-    
+    const Navigate=useNavigate()
     const getData=useCallback(async()=>{
         let mailArr=[];
         try{
@@ -29,15 +33,20 @@ useEffect(()=>{
     getData()
 },[getData])
 
+const openMailHandler=(mail)=>{
+dispatch(MailAction.AddMail(mail))
+  Navigate('/mailDetails')
+}
     return (
-       
+       <> 
       <Container className='mt-5  w-100 ' fluid>
-         {inbox.length===0 &&<h1 style={{textAlign:"center"}}>No Emails</h1>}
+      <h1 className='text-center p-1 mt-5'>INBOX</h1>
+         {inbox.length===0 &&<p style={{textAlign:"center"}}>No Emails</p>}
         <Row   className="w-100 justify-content-center">
           <Col md={12} >
             <ListGroup>
                 {inbox.map(mail=>(
-                   <ListGroup.Item key={mail.id} action>
+                   <ListGroup.Item key={mail.id} action onClick={openMailHandler.bind(null,mail)}>
                    <div className="d-flex justify-content-between align-items-center">
                      <div>
                        <h5>{mail.subject}</h5>
@@ -51,6 +60,7 @@ useEffect(()=>{
           </Col>
         </Row>
       </Container>
+      </>
     );
   }
   

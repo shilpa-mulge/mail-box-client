@@ -4,7 +4,7 @@ import axios from "axios";
 import LoadingSpinner from "../UI/LodingSpinner";
 import { useDispatch } from "react-redux";
 import { AuthActions } from "../store/AuthSlice";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 const SignUp=()=>{
 const dispatch=useDispatch()
 const Navigate=useNavigate()
@@ -23,7 +23,7 @@ const Navigate=useNavigate()
                     email: email, password: password, returnSecureToken: true
                 })
               alert("User has successfully signed up.")
-              const emailid = response.data.email.split('@')[0];
+              const emailid = response.data.email//.split('@')[0];
                 const token=response.data.idToken
                dispatch(AuthActions.login({token:token, emailid:emailid}))
                Navigate('/home')
@@ -42,13 +42,13 @@ const Navigate=useNavigate()
     };
     return(
         <>
-        <Container className="p-4 mt-5 rounded bg-info w-50" fluid>
+        <Container className="p-4 mt-5 w-75" fluid>
         {isLoding &&<p>Loading......</p>}
             <Row className="justify-content-center h1">
             SignUp
             </Row>
             <Row  className="justify-content-center">
-<Form className="w-100 bg-success bg-opacity-50 p-4 text-center" onSubmit={handleSubmit}>
+<Form className="w-100 bg-success bg-opacity-25 p-4 text-center" onSubmit={handleSubmit}>
     <Form.Group className="mb-3" >
         <Form.Control  type="email" placeholder="Email"  value={email}
      onChange={(event) => setEmail(event.target.value)} required />
@@ -64,7 +64,7 @@ const Navigate=useNavigate()
     <Button variant="info" type='submit'>SignUp</Button>
 </Form>
 </Row>
-<Row className="justify-content-center p-4">Already have an account? Login</Row>
+<Row ><NavLink to='/login' style={{textAlign:'center', color:'black'}}> Already have an account? Login</NavLink></Row>
         </Container>
         </>
     )

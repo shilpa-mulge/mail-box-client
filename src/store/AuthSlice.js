@@ -20,7 +20,7 @@ const AuthSlice=createSlice({
                 expiry: new Date().getTime() + 10 * 60000
             }
             state.token=action.payload.token;
-            state.email=action.payload.emailid;
+            state.email=action.payload.emailid
             localStorage.setItem('token', JSON.stringify(item))
             state.isLoggedIn=item!==null?true:false
         },

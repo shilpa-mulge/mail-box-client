@@ -1,6 +1,7 @@
 .wrapper-class {
     padding: 1rem;
     border: 1px solid #efe0e0;
+
   }
   .editor-class{
     background-color:rgb(222, 213, 213);
@@ -10,4 +11,11 @@
   }
   .toolbar-class {
     border: 1px solid #ccc;
+    width:auto;
+  
   }
+.compose{
+  margin-top: 5rem;
+  height: 100%;
+  overflow: auto;
+}

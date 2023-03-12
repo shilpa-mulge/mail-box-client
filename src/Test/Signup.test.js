@@ -1,9 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import SignUp from '../pages/SignUp';
-import axios from 'axios';
 
-jest.mock('axios');
 
 test('submits the form with the correct values when the submit button is clicked', async () => {
   const { getByLabelText, getByRole } = render(<SignupForm />);

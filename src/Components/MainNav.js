@@ -1,24 +1,51 @@
-import React from 'react';
-import { Navbar, Nav, Container } from 'react-bootstrap';
-
+import React,{useState} from 'react';
+import { Navbar, Nav, Container, Offcanvas} from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { PersonCircle,Inbox, UnlockFill,LockFill , SendFill, FileEarmark, Pencil} from 'react-bootstrap-icons';
+import { AuthActions } from '../store/AuthSlice';
+import { NavLink } from 'react-router-dom';
+import './Mainnav.css';
 function MainNav() {
+  const email=useSelector(state=>state.auth.email)
+  const dispatch=useDispatch();
+  const [expanded, setExpanded] = useState(false);
+  const isLoggedIn=useSelector(state=>state.auth.isLoggedIn);
   return (
-    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-      <Container>
-        <Navbar.Brand href="/home">Mailbox</Navbar.Brand>
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="ml-auto">
-            <Nav.Link href="/login">Login</Nav.Link>
-            <Nav.Link href="/signup">Signup</Nav.Link>
-            <Nav.Link href="/inbox">Inbox</Nav.Link>
-            <Nav.Link href="/sent">Sent</Nav.Link>
-            <Nav.Link href="/drafts">Drafts</Nav.Link>
-            <Nav.Link href="/newmail">Compose</Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+    <>
+        <Navbar  bg="dark" variant='dark' expand='true'expanded={expanded} fixed='top'>
+            <Navbar.Toggle aria-controls="responsive-navbar-nav"onClick={()=>setExpanded(!expanded)} />
+            <Navbar.Offcanvas className='w-auto bg-light h5 justify-content-center'onHide={()=>setExpanded(false)}
+              id={`offcanvasNavbar-expand-false`}
+              aria-labelledby={`offcanvasNavbarLabel-expand-false`}
+              placement="start"
+        
+            >
+              <Offcanvas.Header  closeButton onClick={()=>setExpanded(false)}>
+                <Offcanvas.Title id={`offcanvasNavbarLabel-expand-false`}>
+                <PersonCircle/>
+                  {email}
+                </Offcanvas.Title>
+              </Offcanvas.Header>
+              <Offcanvas.Body>
+                <Nav className="justify-content-center color-light flex-grow-2 gap-2 ">
+              {isLoggedIn&&  <Nav.Link as={NavLink} className='my-navbar' to="/newmail" onClick={()=>setExpanded(false)}><Pencil/>Compose</Nav.Link>}
+               {!isLoggedIn&&   <Nav.Link as={NavLink} className='my-navbar' to="/Login"
+                onClick={()=>setExpanded(false)}><UnlockFill/> Login</Nav.Link>}
+               {!isLoggedIn&&  <Nav.Link as={NavLink} className='my-navbar' to="/SignUp"
+                onClick={()=>setExpanded(false)}><UnlockFill/> SignUp</Nav.Link>}
+               {isLoggedIn&&  <Nav.Link as={NavLink} className='my-navbar' to="/inbox"
+                onClick={()=>setExpanded(false)}><Inbox size={30} color='dark'/>  Inbox</Nav.Link>}
+               {isLoggedIn&&   <Nav.Link as={NavLink}  className='my-navbar' to="/sent"
+               onClick={()=>setExpanded(false)}><SendFill/>Sent</Nav.Link>}
+               {isLoggedIn&& <Nav.Link as={NavLink}  className='my-navbar' to="/drafts"onClick={()=>setExpanded(false)}><FileEarmark/>Drafts</Nav.Link>}
+               {isLoggedIn&&  <Nav.Link as={NavLink} className='my-navbar' to="/" onClick={()=>{setExpanded(false); dispatch(AuthActions.logout())}}><LockFill/> Logout</Nav.Link>}
+                </Nav>
+              </Offcanvas.Body>
+            </Navbar.Offcanvas>
+            <Navbar.Brand href="/">Mail Box</Navbar.Brand>
+        </Navbar>
+      
+      </>
   );
 }
 
