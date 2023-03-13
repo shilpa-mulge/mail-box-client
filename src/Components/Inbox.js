@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Container, Row, Col, ListGroup } from 'react-bootstrap';
+import { Container, Row, Col, ListGroup,Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { MailAction } from '../store/MailSlice';
-import { ArrowLeft, Dot } from 'react-bootstrap-icons';
+import { ArrowLeft, Dot ,App} from 'react-bootstrap-icons';
 function Inbox() {
   const dispatch=useDispatch()
     const mail=useSelector(state=>state.auth.email)
@@ -60,22 +60,20 @@ dispatch(MailAction.AddNode('inbox'))
       </Row>
          {inbox.length===0 &&<p style={{textAlign:"center"}}>No Emails</p>}
         <Row   className="w-100 justify-content-center">
-          <Col md={12} >
-            <ListGroup>
+        
+            <Table className='h-100 w-100 ms-4 '>
+            <tbody>
                 {inbox.map(mail=>(
-                   <ListGroup.Item  key={mail.id} action onClick={openMailHandler.bind(null,mail)}>
-                   <div className="d-inline-flex ">
-                {  <Dot  color={!mail.read?'blue':'black'} size={30} />}
-                     <div>
-                       <h5>{mail.subject}</h5>
-                       <p>{mail.content}</p>
-                     </div>
-                     <div>{mail.date}</div>
-                   </div>
-                 </ListGroup.Item>  
+<tr style={{cursor:'pointer'}} key={mail.id}  onClick={openMailHandler.bind(null,mail)}>
+  <td><App/></td>
+  <td>{!mail.read&&<Dot  color='blue'size={30} />}</td>
+  <td>{mail.subject}</td>
+  <td>{mail.content.slice(0,10)}...</td>
+  <td>{mail.date}</td>
+</tr>
                 ))}
-            </ListGroup>
-          </Col>
+              </tbody>
+            </Table>
         </Row>
       </Container>
       </>

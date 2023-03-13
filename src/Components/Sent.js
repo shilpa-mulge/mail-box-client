@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Container, Row, Col, ListGroup } from 'react-bootstrap';
+import { Container, Row, Col, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { App } from 'react-bootstrap-icons';
 import axios from 'axios';
 import { MailAction } from '../store/MailSlice';
 import { ArrowLeft } from 'react-bootstrap-icons';
@@ -21,7 +22,7 @@ function Sent() {
             Semail:response.data[key].Semail,
             Remail:response.data[key].Remail,
             subject:response.data[key].subject,
-            content:response.data[key].emailContent,
+            content:response.data[key].content,
             date:response.data[key].date
         })
     }
@@ -48,21 +49,18 @@ const openMailDetails=(mail)=>{
        <h1 className='text-center'>SENT</h1>
          {inbox.length===0 &&<h1 style={{textAlign:"center"}}>No Emails</h1>}</Row>  
         <Row   className="w-100 justify-content-center mt-5">
-          <Col md={12} >
-            <ListGroup>
+          <Table className='h-100 w-100 ms-4 '>
+            <tbody>
                 {inbox.map(mail=>(
-                   <ListGroup.Item key={mail.id} action onClick={openMailDetails.bind(null,mail)}>
-                   <div className="d-flex justify-content-between align-items-center">
-                     <div>
-                       <h5>{mail.subject}</h5>
-                       <p>{mail.content}</p>
-                     </div>
-                     <div>{mail.date}</div>
-                   </div>
-                 </ListGroup.Item>  
+<tr style={{cursor:'pointer'}} key={mail.id}  onClick={openMailDetails.bind(null,mail)}>
+  <td><App/></td>
+  <td>{mail.subject}</td>
+  <td>{mail.content.slice(0,10)}...</td>
+  <td>{mail.date}</td>
+</tr>
                 ))}
-            </ListGroup>
-          </Col>
+              </tbody>
+            </Table>
         </Row>
       </Container>
     );
