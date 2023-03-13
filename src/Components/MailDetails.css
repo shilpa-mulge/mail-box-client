@@ -6,10 +6,15 @@
   }
   
   .card-header {
-    background-color: #007bff;
+    background-color: #aec4db;
     color: white;
   }
   
   .card-text {
     white-space: pre-wrap;
+  }
+  .details{
+    margin-top: 4rem;
+    width: auto;
+    height: 90vh;
   }

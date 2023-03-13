@@ -10,18 +10,22 @@ import Inbox from './Components/Inbox';
 import Sent from './Components/Sent';
 import ForgetPass from './Components/ForgetPassWord';
 import MailDetails from './Components/MailDetails';
+import NotFound from './pages/NotFound';
+import { useSelector } from 'react-redux';
 function App() {
+  const isLoggedIn=useSelector(state=>state.auth.isLoggedIn)
   return (
     <Root>
     <Routes>
 <Route path='/' element={<ClientPage/>}/>
-<Route path='/login' element={<Login/>}/>
-<Route path='/signup' element={<SignUp/>}/>
-<Route path='/newmail' element={<EmailForm/>}/>
-<Route path='/inbox' element={<Inbox/>}/>
-<Route path='/sent' element={<Sent/>}/>
+{!isLoggedIn&&<Route path='/login' element={<Login/>}/>}
+{!isLoggedIn&& <Route path='/signup' element={<SignUp/>}/>}
+{isLoggedIn&&<Route path='/newmail' element={<EmailForm/>}/>}
+{isLoggedIn&&<Route path='/inbox' element={<Inbox/>}/>}
+{isLoggedIn&&<Route path='/sent' element={<Sent/>}/>}
 <Route path='/forgetpass' element={<ForgetPass/>}/>
-<Route path='/mailDetails' element={<MailDetails/>}/>
+{isLoggedIn&&<Route path='/mailDetails' element={<MailDetails/>}/>}
+<Route path='*' element={<NotFound/>}/>
     </Routes>
     </Root>
   );

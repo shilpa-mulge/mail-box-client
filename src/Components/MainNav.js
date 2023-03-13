@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import { Navbar, Nav, Container, Offcanvas} from 'react-bootstrap';
+import { Navbar, Nav, Container, Offcanvas, Badge} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { PersonCircle,Inbox, UnlockFill,LockFill , SendFill, FileEarmark, Pencil} from 'react-bootstrap-icons';
 import { AuthActions } from '../store/AuthSlice';
@@ -7,6 +7,8 @@ import { NavLink } from 'react-router-dom';
 import './Mainnav.css';
 function MainNav() {
   const email=useSelector(state=>state.auth.email)
+  const inbox=useSelector(state=>state.mail.mailData)
+  const unreadMail=inbox.filter(mail=>mail.read===false)
   const dispatch=useDispatch();
   const [expanded, setExpanded] = useState(false);
   const isLoggedIn=useSelector(state=>state.auth.isLoggedIn);
@@ -22,10 +24,11 @@ function MainNav() {
             >
               <Offcanvas.Header  closeButton onClick={()=>setExpanded(false)}>
                 <Offcanvas.Title id={`offcanvasNavbarLabel-expand-false`}>
-                <PersonCircle/>
+                <PersonCircle/><br/>
                   {email}
                 </Offcanvas.Title>
               </Offcanvas.Header>
+              <hr/>
               <Offcanvas.Body>
                 <Nav className="justify-content-center color-light flex-grow-2 gap-2 ">
               {isLoggedIn&&  <Nav.Link as={NavLink} className='my-navbar' to="/newmail" onClick={()=>setExpanded(false)}><Pencil/>Compose</Nav.Link>}
@@ -34,7 +37,7 @@ function MainNav() {
                {!isLoggedIn&&  <Nav.Link as={NavLink} className='my-navbar' to="/SignUp"
                 onClick={()=>setExpanded(false)}><UnlockFill/> SignUp</Nav.Link>}
                {isLoggedIn&&  <Nav.Link as={NavLink} className='my-navbar' to="/inbox"
-                onClick={()=>setExpanded(false)}><Inbox size={30} color='dark'/>  Inbox</Nav.Link>}
+                onClick={()=>setExpanded(false)}><Inbox size={30} color='dark'/>  Inbox<Badge bg='info' >{`${unreadMail.length}  Unread`}</Badge> </Nav.Link>}
                {isLoggedIn&&   <Nav.Link as={NavLink}  className='my-navbar' to="/sent"
                onClick={()=>setExpanded(false)}><SendFill/>Sent</Nav.Link>}
                {isLoggedIn&& <Nav.Link as={NavLink}  className='my-navbar' to="/drafts"onClick={()=>setExpanded(false)}><FileEarmark/>Drafts</Nav.Link>}
