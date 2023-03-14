@@ -1,17 +1,17 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import {  useEffect, useMemo } from 'react';
 import { Container, Row, Col,Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { MailAction } from '../store/MailSlice';
 import { ArrowLeft, Dot ,App} from 'react-bootstrap-icons';
+import useHttp from '../customHooks/useHttp';
 function Inbox() {
   const dispatch=useDispatch()
     const mail=useSelector(state=>state.auth.email)
     const inbox=useSelector(state=>state.mail.mailData)
     const email=mail.split('@')[0]
     const Navigate=useNavigate()
-    const getData=useCallback(async()=>{
+  /*   const getData=useCallback(async()=>{
         let mailArr=[];
         try{
         const response= await axios.get(`https://mail-box-client-406c3-default-rtdb.firebaseio.com/${email}/inbox.json`);
@@ -33,17 +33,34 @@ function Inbox() {
    alert(error.response.data.error.message)
 }
         },[email]);
-    
+     */
+
+//Custom hook
+        const { isLoading, error, sendRequest}=useHttp()
 
 useEffect(()=>{
-  const intervalId = setInterval(() => {
-    getData()
-  }, 2000);
-  return () => clearInterval(intervalId);
-},[getData])
+
+  const TransferdData=(responseData)=>{
+    let mailArr=[];
+    for(const key in responseData){
+      mailArr.push({
+          id:key,
+          read:responseData[key].read,
+          Semail:responseData[key].Semail,
+          Remail:responseData[key].Remail,
+          subject:responseData[key].subject,
+          content:responseData[key].content,
+          date:responseData[key].date
+      })
+    }
+  dispatch(MailAction.MailArr(mailArr))
+  }
+  sendRequest({url:`https://mail-box-client-406c3-default-rtdb.firebaseio.com/${email}/inbox.json`},TransferdData )
+  
+},[sendRequest])
 
 
-const openMailHandler=async(mail)=>{
+/* const openMailHandler=async(mail)=>{
   try{
     await axios.put(`https://mail-box-client-406c3-default-rtdb.firebaseio.com/${email}/inbox/${mail.id}.json`, {id:mail.id,Semail:mail.Semail,
     Remail:mail.Remail,subject:mail.subject,content:mail.content, date:mail.date, read:true})
@@ -54,6 +71,22 @@ dispatch(MailAction.AddMail({id:mail.id,Semail:mail.Semail,
   Remail:mail.Remail,subject:mail.subject,content:mail.content,date:mail.date, read:true}))
 dispatch(MailAction.AddNode('inbox'))
   Navigate('/mailDetails')
+} */
+
+const openMailHandler=(mail)=>{
+const applyData=()=>{
+  dispatch(MailAction.AddMail({id:mail.id,Semail:mail.Semail,
+    Remail:mail.Remail,subject:mail.subject,content:mail.content,date:mail.date, read:true}))
+  dispatch(MailAction.AddNode('inbox'))
+    Navigate('/mailDetails')
+}
+  sendRequest({url:`https://mail-box-client-406c3-default-rtdb.firebaseio.com/${email}/inbox/${mail.id}.json`,
+  method: 'PUT',
+  body: { id:mail.id,Semail:mail.Semail,Remail:mail.Remail,subject:mail.subject,content:mail.content, date:mail.date, read:true },
+  headers: {
+    'Content-Type': 'application/json',
+  }
+}, applyData)
 }
 
 //optimization
@@ -74,6 +107,8 @@ const memoizedMailList = useMemo(() => {
     return (
        <> 
       <Container className='mt-5  w-100 ' fluid>
+        {isLoading&& <h3>Loading...</h3>}
+        {error && alert(error)}
         <Row>
           <Col><ArrowLeft size={30} onClick={()=>Navigate('/')} /></Col>
       <h1 className='text-center'>INBOX</h1>

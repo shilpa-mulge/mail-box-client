@@ -4,7 +4,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw } from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './EmailForm.css'
-import axios from 'axios';
+import useHttp from '../customHooks/useHttp';
 import { useSelector } from 'react-redux';
 import {ArrowLeft, SendFill} from 'react-bootstrap-icons'
 import { useNavigate } from 'react-router-dom';
@@ -20,36 +20,39 @@ const EmailForm = () => {
     setEditorState(newEditorState);
   };
 
-  const handleSubmit =async (event) => {
-    event.preventDefault();
-    const date=new Date()
-    const day=date.getDate();
-    const month=date.getMonth()+1;
-    const year=date.getFullYear();
-    const time=`${day}/${month}/${year}`;
+//custome hook
+const { isLoading, error, sendRequest}=useHttp()
+const handleSubmit = (event) => {
+  event.preventDefault();
+  const date=new Date()
+  const day=date.getDate();
+  const month=date.getMonth()+1;
+  const year=date.getFullYear();
+  const time=`${day}/${month}/${year}`;
 
-    const remail = Remail.split('@')[0];
-    const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
+  const remail = Remail.split('@')[0];
+  const blocks = convertToRaw(editorState.getCurrentContent()).blocks;
 const value = blocks.map(block => (!block.text.trim() && '\n') || block.text).join("\n");
-    // Code to submit email goes here
- try{    await axios.post(`https://mail-box-client-406c3-default-rtdb.firebaseio.com/${email}/sentbox.json`, {Semail:mail,
-Remail:Remail,subject:subject, content:value, date:time,})
-  }catch(error){
-    alert(error.response.data.error.message)
-  }
-  try{
-await axios.post(`https://mail-box-client-406c3-default-rtdb.firebaseio.com/${remail}/inbox.json`, {Semail:mail,
-Remail:Remail,subject:subject, content:value, date:time, read:false})
-  }catch(error){
-    alert(error.response.data.error.message)
-  }
-  Navigate('/sent')
-  };
-  
 
+sendRequest({url:`https://mail-box-client-406c3-default-rtdb.firebaseio.com/${email}/sentbox.json`,  method: 'POST',
+body: {Semail:mail,Remail:Remail,subject:subject, content:value, date:time,},
+headers: {
+  'Content-Type': 'application/json',
+}})
+
+sendRequest({url:`https://mail-box-client-406c3-default-rtdb.firebaseio.com/${remail}/inbox.json`,  method: 'POST',
+body: {Semail:mail,Remail:Remail,subject:subject, content:value, date:time,read:false},
+headers: {
+  'Content-Type': 'application/json',
+}})
+
+Navigate('/sent')
+}
   return (
     <>
     <Container className='compose' fluid>
+      {isLoading &&<h3>Loading....</h3>}
+      {error && alert(error)}
       <Row>
         <Col><ArrowLeft size={30} onClick={()=>Navigate('/')}/></Col>
          <h1 className='text-center'>Compose Mail</h1></Row>

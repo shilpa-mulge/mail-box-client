@@ -20,9 +20,9 @@ const ForgetPass=()=>{
     }
 return(
     <>
-    <Container className="rounded p-4 mb-4 w-75">
+    <Container className="rounded p-4 mb-4 mt-5 w-75">
         {isLoading&& <Row><h2>loading....</h2></Row>}
-        {!isLoading&&data &&<Row><NavLink to='/Login'>Login</NavLink></Row>}
+        {!isLoading&&data &&<Row><NavLink style={{textAlign:'center', fontSize:'20px'}} to='/Login'>Login</NavLink></Row>}
     </Container>
  {!isLoading&& !data&& <Container className="rounded p-4 mb-4  w-100" fluid>
      <Row className="justify-content-center mb-4 ">
