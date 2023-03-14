@@ -41,7 +41,6 @@ const openMailDetails=(mail)=>{
   dispatch(MailAction.AddNode('sentbox'))
   Navigate('/mailDetails')
 }
-
     return (
        
       <Container className='mt-5 w-100 ' fluid>
