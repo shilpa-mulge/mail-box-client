@@ -76,7 +76,7 @@ Remail:Remail,subject:subject, content:value, date:time, read:false})
         </Form.Group>
         <Form.Group controlId="emailForm.Body">
           <Editor 
-            toolbarStyle={{ height: 100, overflow:'auto'}}
+            toolbarStyle={{ height: 60, overflow:'auto'}}
             wrapperClassName="wrapper-class"
             editorClassName="editor-class"
             toolbarClassName="toolbar-class"

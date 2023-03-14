@@ -25,8 +25,8 @@ Navigate(-1)
             <Card>
               <Card.Header>
               <Container className='mb-3'><Row>
-                <Col><ArrowLeftShort size={30}onClick={()=>Navigate(-1)}/></Col>
-                <Col className=' d-flex justify-content-end'> <Trash size={30} onClick={DeleteHandler}/></Col></Row></Container>
+                <Col><ArrowLeftShort size={30}onClick={()=>Navigate(-1)} style={{cursor:'pointer'}}/></Col>
+                <Col className=' d-flex justify-content-end'> <Trash style={{cursor:'pointer'}} size={30} onClick={DeleteHandler}/></Col></Row></Container>
                 <Container>
                      Mail Details
                   <Dropdown>

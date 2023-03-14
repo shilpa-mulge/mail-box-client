@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { Container, Row, Col, ListGroup,Table } from 'react-bootstrap';
+import { useCallback, useEffect, useMemo } from 'react';
+import { Container, Row, Col,Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -36,8 +36,12 @@ function Inbox() {
     
 
 useEffect(()=>{
+  const intervalId = setInterval(() => {
     getData()
+  }, 2000);
+  return () => clearInterval(intervalId);
 },[getData])
+
 
 const openMailHandler=async(mail)=>{
   try{
@@ -51,6 +55,22 @@ dispatch(MailAction.AddMail({id:mail.id,Semail:mail.Semail,
 dispatch(MailAction.AddNode('inbox'))
   Navigate('/mailDetails')
 }
+
+//optimization
+const memoizedMailList = useMemo(() => {
+  return inbox.map(mail=>(
+    <tr style={{cursor:'pointer'}} key={mail.id}  onClick={openMailHandler.bind(null,mail)}>
+      <td><App/></td>
+      <td>{!mail.read&&<Dot  color='blue'size={30} />}</td>
+      <td>{mail.subject}</td>
+      <td>{mail.content.slice(0,10)}...</td>
+      <td>{mail.date}</td>
+    </tr>
+                    
+  ));
+}, [inbox]);
+
+
     return (
        <> 
       <Container className='mt-5  w-100 ' fluid>
@@ -63,15 +83,7 @@ dispatch(MailAction.AddNode('inbox'))
         
             <Table className='h-100 w-100 ms-4 '>
             <tbody>
-                {inbox.map(mail=>(
-<tr style={{cursor:'pointer'}} key={mail.id}  onClick={openMailHandler.bind(null,mail)}>
-  <td><App/></td>
-  <td>{!mail.read&&<Dot  color='blue'size={30} />}</td>
-  <td>{mail.subject}</td>
-  <td>{mail.content.slice(0,10)}...</td>
-  <td>{mail.date}</td>
-</tr>
-                ))}
+                {memoizedMailList}
               </tbody>
             </Table>
         </Row>
